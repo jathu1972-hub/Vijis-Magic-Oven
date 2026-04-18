@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vijis Magic Oven · Handcrafted Cakes</title>
+    <meta name="description" content="Fresh, handcrafted celebration cakes. Browse, order, and enjoy." />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+
+      <!-- NAV -->
+      <header class="topbar">
+        <a href="/" class="brand">
+          <span class="brand-eyebrow">Chennai's finest</span>
+          <span class="brand-name">Vijis Magic Oven</span>
+        </a>
+        <nav class="topbar-actions">
+          <span id="viewerRoleBadge" class="ghost-link" style="pointer-events:none"></span>
+          <a class="ghost-link" href="/owner-login">Owner</a>
+          <button class="secondary-btn hidden" id="logoutBtn" type="button">Log out</button>
+        </nav>
+      </header>
+
+      <main>
+
+        <!-- STATUS BANNER -->
+        <div class="main-layout" style="padding-bottom:0">
+          <div class="notice hidden" id="statusBanner" role="alert"></div>
+        </div>
+
+        <!-- HERO -->
+        <section class="main-layout" style="padding-top:2.5rem;padding-bottom:0">
+          <div class="hero-card">
+            <div>
+              <p class="eyebrow">Baked fresh every day</p>
+              <h2>Handcrafted cakes for every<br><em style="font-style:italic;color:var(--rose)">sweet moment</em></h2>
+              <p class="hero-copy">Browse our full catalog, create an account,<br>and place a secure order in minutes.</p>
+            </div>
+            <div class="hero-stats">
+              <div class="stat-pill">
+                <span class="stat-num" id="cakeCount">—</span>
+                <span class="stat-label">Cakes</span>
+              </div>
+              <div class="stat-pill">
+                <span class="stat-num" id="viewerRole" style="font-size:1rem">Guest</span>
+                <span class="stat-label">Session</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- HOW IT WORKS -->
+        <section class="main-layout" style="padding-top:1.5rem;padding-bottom:0">
+          <div class="how-it-works">
+            <div class="how-step">
+              <span class="how-step-icon">🍰</span>
+              <h4>Browse cakes</h4>
+              <p>Explore our fresh catalog, no account needed</p>
+            </div>
+            <div class="how-step">
+              <span class="how-step-icon">👤</span>
+              <h4>Sign in</h4>
+              <p>Create a free customer account in seconds</p>
+            </div>
+            <div class="how-step">
+              <span class="how-step-icon">📦</span>
+              <h4>Place order</h4>
+              <p>Submit securely and we'll bake it fresh for you</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- AUTH PANEL -->
+        <section class="main-layout" style="padding-bottom:0">
+          <div class="auth-panel" id="authPanel">
+            <div class="auth-panel-header">
+              <p class="eyebrow">Customer access</p>
+              <h3>Create an account or sign in</h3>
+              <p>Owner accounts are managed separately — use the Owner link in the nav.</p>
+            </div>
+            <div class="auth-grid">
+              <div class="form-card">
+                <h4>Sign up</h4>
+                <form id="registerForm" novalidate>
+                  <div class="form-field">
+                    <label for="reg-name">Full name</label>
+                    <input id="reg-name" name="name" type="text" maxlength="80" autocomplete="name" placeholder="Priya Kumar" required />
+                  </div>
+                  <div class="form-field">
+                    <label for="reg-email">Email</label>
+                    <input id="reg-email" name="email" type="email" maxlength="255" autocomplete="email" placeholder="priya@example.com" required />
+                  </div>
+                  <div class="form-field">
+                    <label for="reg-password">Password</label>
+                    <input id="reg-password" name="password" type="password" minlength="8" autocomplete="new-password" placeholder="Min. 8 chars, mixed case + symbol" required />
+                  </div>
+                  <button class="primary-btn" type="submit" style="width:100%">Create account</button>
+                </form>
+              </div>
+              <div class="form-card">
+                <h4>Sign in</h4>
+                <form id="loginForm" novalidate>
+                  <div class="form-field">
+                    <label for="login-email">Email</label>
+                    <input id="login-email" name="email" type="email" maxlength="255" autocomplete="email" placeholder="priya@example.com" required />
+                  </div>
+                  <div class="form-field">
+                    <label for="login-password">Password</label>
+                    <input id="login-password" name="password" type="password" minlength="8" autocomplete="current-password" placeholder="Your password" required />
+                  </div>
+                  <button class="primary-btn" type="submit" style="width:100%;margin-top:.75rem">Log in</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- CAKE CATALOG -->
+        <section class="main-layout">
+          <div class="section-header">
+            <span class="section-tag">Our selection</span>
+            <h2 class="section-title">Available cakes</h2>
+            <p class="section-desc">Every cake is freshly baked to order. Prices and availability managed by the owner.</p>
+          </div>
+          <div class="cake-grid" id="cakeGrid"></div>
+          <p class="empty-state hidden" id="cakeEmptyState">No cakes available yet. Check back soon! 🎂</p>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- MY ORDERS -->
+        <section class="main-layout hidden" id="ordersPanel">
+          <div class="section-header">
+            <span class="section-tag">Your history</span>
+            <h2 class="section-title">My orders</h2>
+            <p class="section-desc">Order history is private to your account only.</p>
+          </div>
+          <div class="orders-list" id="ordersList"></div>
+        </section>
+
+      </main>
+
+      <footer>
+        <p>© 2025 Vijis Magic Oven &nbsp;·&nbsp; Chennai, Tamil Nadu &nbsp;·&nbsp; Made with ❤️</p>
+      </footer>
+    </div>
+
+    <!-- ORDER MODAL -->
+    <div class="modal-backdrop hidden" id="orderModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-card">
+        <button class="modal-close" id="closeOrderModal" type="button" aria-label="Close order modal">×</button>
+        <div class="modal-preview" id="orderCakePreview"></div>
+        <div class="modal-body">
+          <form id="orderForm" novalidate>
+            <h4 id="modalTitle">Place your order</h4>
+            <input id="selectedCakeId" type="hidden" name="cakeId" />
+            <div class="form-field">
+              <label for="orderQuantity">Quantity</label>
+              <input id="orderQuantity" name="quantity" type="number" min="1" max="20" value="1" required />
+            </div>
+            <div class="form-field">
+              <label for="deliveryAddress">Delivery address</label>
+              <textarea id="deliveryAddress" name="deliveryAddress" rows="3" maxlength="250" placeholder="Your full delivery address" required></textarea>
+            </div>
+            <div class="form-field">
+              <label for="orderNotes">Notes (optional)</label>
+              <textarea id="orderNotes" name="notes" rows="2" maxlength="500" placeholder="Allergies, special requests…"></textarea>
+            </div>
+            <div class="form-actions">
+              <button class="primary-btn" type="submit" id="orderSubmitBtn" style="flex:1">Submit order</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
