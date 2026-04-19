@@ -1,13 +1,11 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
-
 import { env } from "./config/env.js";
 import authRoutes from "./routes/auth.routes.js";
 import cakeRoutes from "./routes/cake.routes.js";
@@ -20,7 +18,6 @@ const __dirname = path.dirname(__filename);
 const clientDir = path.join(__dirname, "../client");
 
 const app = express();
-
 app.disable("x-powered-by");
 
 if (env.isProduction) {
@@ -41,7 +38,7 @@ app.use(
         styleSrc: ["'self'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
         imgSrc: ["'self'", "data:", "https://res.cloudinary.com", "blob:"],
-        connectSrc: ["'self'"],
+        connectSrc: ["'self'", "https://vijis-magic-oven.onrender.com"],
         objectSrc: ["'none'"],
         frameAncestors: ["'none'"],
         baseUri: ["'self'"],
@@ -52,10 +49,17 @@ app.use(
 );
 
 /* ── CORS ─────────────────────────────────────────── */
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "https://vijis-magic-oven.vercel.app",
+  env.clientOrigin,
+].filter(Boolean);
+
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || origin === env.clientOrigin) {
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
         return;
       }
@@ -95,12 +99,9 @@ app.use("/orders", orderRoutes);
 
 /* ── Static client files ──────────────────────────── */
 app.use(express.static(clientDir));
-
 app.get("/owner-login", (_req, res) => {
   res.sendFile(path.join(clientDir, "owner.html"));
 });
-
-// SPA fallback — serve index.html for all non-API unmatched routes
 app.get("*", (_req, res) => {
   res.sendFile(path.join(clientDir, "index.html"));
 });
