@@ -34,11 +34,15 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "https://fonts.googleapis.com"],
-        styleSrc: ["'self'", "https://fonts.googleapis.com"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
         imgSrc: ["'self'", "data:", "https://res.cloudinary.com", "blob:"],
-        connectSrc: ["'self'", "https://vijis-magic-oven.onrender.com"],
+        connectSrc: [
+          "'self'",
+          "https://vijis-magic-oven.onrender.com",
+          "https://vijis-magic-oven.vercel.app",
+        ],
         objectSrc: ["'none'"],
         frameAncestors: ["'none'"],
         baseUri: ["'self'"],
@@ -53,6 +57,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:5173",
   "https://vijis-magic-oven.vercel.app",
+  "https://vijis-magic-oven.onrender.com",
   env.clientOrigin,
 ].filter(Boolean);
 
@@ -99,9 +104,11 @@ app.use("/orders", orderRoutes);
 
 /* ── Static client files ──────────────────────────── */
 app.use(express.static(clientDir));
+
 app.get("/owner-login", (_req, res) => {
   res.sendFile(path.join(clientDir, "owner.html"));
 });
+
 app.get("*", (_req, res) => {
   res.sendFile(path.join(clientDir, "index.html"));
 });
