@@ -210,11 +210,12 @@ async function loadDashboardData() {
 
 async function handleOwnerLogin(event) {
   event.preventDefault();
+  const formData = collectFormData(refs.ownerLoginForm); // collect BEFORE disabling
   setFormBusy(refs.ownerLoginForm, true);
   try {
     const data = await api("/auth/owner-login", {
       method: "POST",
-      body: collectFormData(refs.ownerLoginForm),
+      body: formData,
     });
     refs.ownerLoginForm.reset();
     state.user = data.user;
