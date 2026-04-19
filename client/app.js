@@ -214,11 +214,12 @@ async function refreshSession() {
 
 async function handleRegister(event) {
   event.preventDefault();
+  const formData = collectFormData(refs.registerForm);
   setFormBusy(refs.registerForm, true);
   try {
     const data = await api("/auth/register", {
       method: "POST",
-      body: collectFormData(refs.registerForm),
+      body: formData,
     });
     refs.registerForm.reset();
     state.user = data.user;
@@ -234,11 +235,12 @@ async function handleRegister(event) {
 
 async function handleLogin(event) {
   event.preventDefault();
+  const formData = collectFormData(refs.loginForm);
   setFormBusy(refs.loginForm, true);
   try {
     const data = await api("/auth/login", {
       method: "POST",
-      body: collectFormData(refs.loginForm),
+      body: formData,
     });
     refs.loginForm.reset();
     state.user = data.user;
