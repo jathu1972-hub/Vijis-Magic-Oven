@@ -1,6 +1,12 @@
 import crypto from "node:crypto";
 
-import { csrfCookieOptions } from "../utils/cookies.js";
+const csrfCookieOptions = {
+  httpOnly: false,
+  sameSite: "none",
+  secure: true,
+  path: "/",
+  maxAge: 60 * 60 * 1000, // 1 hour
+};
 
 export function issueCsrfToken(_req, res) {
   const csrfToken = crypto.randomBytes(32).toString("hex");
@@ -13,11 +19,8 @@ export function verifyCsrf(req, res, next) {
     next();
     return;
   }
-
   const cookieToken = req.cookies?.csrf_token;
   const headerToken = req.get("x-csrf-token");
-
-  // Both must be present and equal length for timing-safe compare
   if (
     !cookieToken ||
     !headerToken ||
@@ -27,6 +30,5 @@ export function verifyCsrf(req, res, next) {
     res.status(403).json({ message: "CSRF token validation failed." });
     return;
   }
-
   next();
 }
