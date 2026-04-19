@@ -165,7 +165,7 @@ function sendWhatsAppMessage(payload, cake) {
 🎂 *Cake:* ${quantity} × ${cakeName}${price ? " (" + price + ")" : ""}
 📍 *Delivery Address:* ${payload.deliveryAddress}${payload.notes ? "\n📝 *Notes:* " + payload.notes : ""}
 
-Please confirm my order. Thank you! 🙏`;
+Please confirm my order. Thank you!`;
 
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
   window.open(url, "_blank");
