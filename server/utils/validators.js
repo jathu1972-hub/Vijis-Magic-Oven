@@ -8,8 +8,7 @@ export const registerValidation = [
   body("email")
     .trim()
     .isEmail()
-    .withMessage("A valid email address is required.")
-    ,
+    .withMessage("A valid email address is required."),
   body("password")
     .isStrongPassword({
       minLength: 8,
@@ -27,8 +26,7 @@ export const loginValidation = [
   body("email")
     .trim()
     .isEmail()
-    .withMessage("A valid email address is required.")
-    ,
+    .withMessage("A valid email address is required."),
   body("password")
     .isString()
     .isLength({ min: 8, max: 128 })
@@ -86,12 +84,10 @@ export const uuidParamValidation = [
 
 export function validateRequest(req, res, next) {
   const result = validationResult(req);
-
   if (result.isEmpty()) {
     next();
     return;
   }
-
   res.status(422).json({
     message: "Validation failed.",
     errors: result.array().map((error) => ({
