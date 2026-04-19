@@ -28,7 +28,7 @@ export const loginValidation = [
     .trim()
     .isEmail()
     .withMessage("A valid email address is required.")
-    .normalizeEmail(),
+    ,
   body("password")
     .isString()
     .isLength({ min: 8, max: 128 })
