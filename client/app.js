@@ -13,6 +13,8 @@ import {
   statusBadgeClass,
 } from "./shared.js";
 
+const WHATSAPP_NUMBER = "919629771369"; 
+
 const state = {
   user: null,
   cakes: [],
@@ -56,7 +58,6 @@ function renderCakes() {
     return;
   }
 
-  // Use Cloudinary auto-optimization if URL contains /upload/
   const optimizeUrl = (url) =>
     url.includes("res.cloudinary.com")
       ? url.replace("/upload/", "/upload/w_600,f_auto,q_auto/")
@@ -147,6 +148,27 @@ function syncAuthUi() {
       "warning"
     );
   }
+}
+
+/* ─── WhatsApp ─────────────────────────────────────── */
+
+function sendWhatsAppMessage(payload, cake) {
+  const quantity = payload.items[0].quantity;
+  const cakeName = cake?.name || "Cake";
+  const price = cake ? formatCurrency(cake.price * quantity) : "";
+
+  const message =
+`🎂 *New Order - Vijis Magic Oven*
+
+👤 *Customer:* ${state.user.name}
+📧 *Email:* ${state.user.email}
+🎂 *Cake:* ${quantity} × ${cakeName}${price ? " (" + price + ")" : ""}
+📍 *Delivery Address:* ${payload.deliveryAddress}${payload.notes ? "\n📝 *Notes:* " + payload.notes : ""}
+
+Please confirm my order. Thank you! 🙏`;
+
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  window.open(url, "_blank");
 }
 
 /* ─── Order Modal ──────────────────────────────────── */
@@ -282,7 +304,6 @@ async function handleOrderSubmit(event) {
     return;
   }
 
-  // Prevent double-submit
   if (state.orderPending) return;
   state.orderPending = true;
   setFormBusy(refs.orderForm, true);
@@ -295,10 +316,15 @@ async function handleOrderSubmit(event) {
       notes: refs.orderNotes.value,
     };
 
-    const data = await api("/orders", { method: "POST", body: payload });
-    showBanner(refs.statusBanner, "Order placed! We'll bake it fresh. 🎂", "success");
+    const cake = state.activeCake;
+    await api("/orders", { method: "POST", body: payload });
+    showBanner(refs.statusBanner, "Order placed! Redirecting to WhatsApp… 🎂", "success");
     closeOrderModal();
     await loadOrders();
+
+    // Send WhatsApp message to owner
+    sendWhatsAppMessage(payload, cake);
+
   } catch (error) {
     showBanner(refs.statusBanner, getErrorMessage(error), "danger");
     state.orderPending = false;
