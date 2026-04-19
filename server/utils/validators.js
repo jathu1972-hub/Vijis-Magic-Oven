@@ -9,7 +9,7 @@ export const registerValidation = [
     .trim()
     .isEmail()
     .withMessage("A valid email address is required.")
-    .normalizeEmail(),
+    ,
   body("password")
     .isStrongPassword({
       minLength: 8,
