@@ -7,6 +7,7 @@ import express from "express";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { env } from "./config/env.js";
+import passport from "./config/passport.js";
 import authRoutes from "./routes/auth.routes.js";
 import cakeRoutes from "./routes/cake.routes.js";
 import orderRoutes from "./routes/order.routes.js";
@@ -37,7 +38,7 @@ app.use(
         scriptSrc: ["'self'", "'unsafe-inline'"],
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
-        imgSrc: ["'self'", "data:", "https://res.cloudinary.com", "blob:"],
+        imgSrc: ["'self'", "data:", "https://res.cloudinary.com", "blob:", "https://lh3.googleusercontent.com"],
         connectSrc: [
           "'self'",
           "https://vijis-magic-oven.onrender.com",
@@ -46,7 +47,7 @@ app.use(
         objectSrc: ["'none'"],
         frameAncestors: ["'none'"],
         baseUri: ["'self'"],
-        formAction: ["'self'"],
+        formAction: ["'self'", "https://accounts.google.com"],
       },
     },
   })
@@ -74,7 +75,7 @@ app.use(
   })
 );
 
-/* ── Global rate limiter (all routes) ────────────── */
+/* ── Global rate limiter ──────────────────────────── */
 app.use(
   rateLimit({
     windowMs: 60 * 1000,
@@ -90,7 +91,15 @@ app.use(compression());
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: false, limit: "1mb" }));
 app.use(cookieParser());
-app.use(verifyCsrf);
+
+/* ── Passport ─────────────────────────────────────── */
+app.use(passport.initialize());
+
+/* ── CSRF (skip Google OAuth routes) ─────────────── */
+app.use((req, res, next) => {
+  if (req.path.startsWith("/auth/google")) return next();
+  verifyCsrf(req, res, next);
+});
 
 /* ── Health check ─────────────────────────────────── */
 app.get("/health", (_req, res) => {
