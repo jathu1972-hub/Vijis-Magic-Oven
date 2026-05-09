@@ -1,14 +1,11 @@
 import dotenv from "dotenv";
-
 dotenv.config();
 
 function requireEnv(name) {
   const value = process.env[name];
-
   if (!value) {
     throw new Error(`Missing required environment variable: ${name}`);
   }
-
   return value;
 }
 
@@ -21,7 +18,10 @@ export const env = {
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || "12h",
   cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME || "",
   cloudinaryApiKey: process.env.CLOUDINARY_API_KEY || "",
-  cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET || ""
+  cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET || "",
+  googleClientId: requireEnv("GOOGLE_CLIENT_ID"),
+  googleClientSecret: requireEnv("GOOGLE_CLIENT_SECRET"),
+  googleCallbackUrl: process.env.GOOGLE_CALLBACK_URL || "https://vijis-magic-oven.onrender.com/auth/google/callback",
 };
 
 env.isProduction = env.nodeEnv === "production";
