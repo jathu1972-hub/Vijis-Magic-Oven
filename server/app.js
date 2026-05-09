@@ -38,7 +38,7 @@ app.use(
         scriptSrc: ["'self'", "'unsafe-inline'"],
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
-        imgSrc: ["'self'", "data:", "https://res.cloudinary.com", "blob:", "https://lh3.googleusercontent.com"],
+        imgSrc: ["'self'", "data:", "https://res.cloudinary.com", "blob:", "https://lh3.googleusercontent.com", "https://www.gstatic.com"],
         connectSrc: [
           "'self'",
           "https://vijis-magic-oven.onrender.com",
