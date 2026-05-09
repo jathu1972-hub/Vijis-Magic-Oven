@@ -227,5 +227,21 @@ router.post("/logout", (_req, res) => {
   clearAuthCookie(res);
   res.json({ message: "Logged out successfully." });
 });
+import passportLib from "passport";
 
+/* ── Google OAuth ─────────────────────────────────── */
+router.get(
+  "/google",
+  passportLib.authenticate("google", { scope: ["profile", "email"], session: false })
+);
+
+router.get(
+  "/google/callback",
+  passportLib.authenticate("google", { session: false, failureRedirect: "/?error=google" }),
+  asyncHandler(async (req, res) => {
+    const token = signAuthToken(req.user);
+    setAuthCookie(res, token);
+    res.redirect(`${env.clientOrigin}/?google=success`);
+  })
+);
 export default router;
