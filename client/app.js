@@ -13,7 +13,7 @@ import {
   statusBadgeClass,
 } from "./shared.js";
 
-const WHATSAPP_NUMBER = "919629771369"; 
+const WHATSAPP_NUMBER = "919629771369";
 
 const state = {
   user: null,
@@ -165,7 +165,7 @@ function sendWhatsAppMessage(payload, cake) {
 🎂 *Cake:* ${quantity} × ${cakeName}${price ? " (" + price + ")" : ""}
 📍 *Delivery Address:* ${payload.deliveryAddress}${payload.notes ? "\n📝 *Notes:* " + payload.notes : ""}
 
-Please confirm my order. Thank you!`;
+Please confirm my order. Thank you! 🙏`;
 
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
   window.open(url, "_blank");
@@ -321,8 +321,6 @@ async function handleOrderSubmit(event) {
     showBanner(refs.statusBanner, "Order placed! Redirecting to WhatsApp… 🎂", "success");
     closeOrderModal();
     await loadOrders();
-
-    // Send WhatsApp message to owner
     sendWhatsAppMessage(payload, cake);
 
   } catch (error) {
@@ -336,6 +334,13 @@ async function handleOrderSubmit(event) {
 /* ─── Boot ─────────────────────────────────────────── */
 
 async function init() {
+  // Handle Google OAuth success redirect
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get("google") === "success") {
+    window.history.replaceState({}, "", "/");
+    showBanner(refs.statusBanner, "Signed in with Google! 🎉", "success");
+  }
+
   try {
     await ensureCsrfToken();
     await refreshSession();
