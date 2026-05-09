@@ -17,7 +17,6 @@ passport.use(
 
         if (!email) return done(new Error("No email from Google"));
 
-        // Check if user exists
         const existing = await pool.query(
           "SELECT * FROM users WHERE email = $1 LIMIT 1",
           [email]
@@ -27,7 +26,6 @@ passport.use(
           return done(null, existing.rows[0]);
         }
 
-        // Create new user
         const inserted = await pool.query(
           `INSERT INTO users (name, email, password_hash, role)
            VALUES ($1, $2, $3, 'CUSTOMER')
